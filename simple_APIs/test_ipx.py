@@ -14,7 +14,7 @@ def getsid():
     return rest['result']['sid']
 
 #m: {"jsonrpc":"2.0","method":"Login","params":{"username":"user","password":"3fad88420a85798e4e41157311047fc0","sid":"4f046c3f-fee8-4f26-8557-a2b99c995604"},"id":"44"}
-def mgw_login(sid):
+def mgw_login(sid, user, passwd):
     login_param = {
         "jsonrpc":"2.0",
         "method":"Login",
@@ -24,8 +24,9 @@ def mgw_login(sid):
         "id":"44"
     }
     #print("old tmp2: %s" % (login_param))
+    login_param["params"]["username"] = user
     login_param["params"]["sid"] = sid
-    passwd = 'Emerson01'  #"3fad88420a85798e4e41157311047fc0"
+    #passwd = passwd  #"3fad88420a85798e4e41157311047fc0"
     login_param["params"]["password"]  = hashlib.md5(passwd.encode()).hexdigest()
     #print("new tmp2: %s" % (login_param))
     login_param_str = json.dumps(login_param)
@@ -88,7 +89,9 @@ def remove_ipx6(sid, iid):
 
 if __name__ == "__main__":
     sid = getsid()
-    if (mgw_login(sid) == 200):
+    user = input("Please enter your name:")
+    passwd = input("Please enter your passwd:")
+    if (mgw_login(sid, user, passwd) == 200):
         for cnt in range(100):
             print("====================> ipx cnt: %d" %(cnt))
             iid = add_ipx6(sid)
